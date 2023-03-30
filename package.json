@@ -1,5 +1,5 @@
 {
-  "name": "sjsutils",
+  "name": "@vededoc/sjsutils",
   "version": "0.0.1",
   "description": "some javascript utility functions",
   "main": "dist/index.js",
