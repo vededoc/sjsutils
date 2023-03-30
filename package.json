@@ -13,11 +13,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vededoc/jsetc.git"
+    "url": "git+https://github.com/vededoc/sjsutils.git"
   },
   "author": "vededoc",
   "license": "MIT",
-  "homepage":"https://github.com/vededoc/jsetc#readme"  ,
+  "homepage":"https://github.com/vededoc/sjsutils#readme"  ,
   "devDependencies": {
     "ts-node": "^10.9.1",
     "typescript": "^5.0.2",
