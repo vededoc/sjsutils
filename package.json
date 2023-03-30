@@ -1,0 +1,26 @@
+{
+  "name": "sjsutils",
+  "version": "0.0.1",
+  "description": "some javascript utility functions",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "javascript", "typescript", "utility", "date", "random"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vededoc/jsetc.git"
+  },
+  "author": "vededoc",
+  "license": "MIT",
+  "homepage":"https://github.com/vededoc/jsetc#readme"  ,
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.2",
+    "@types/node": "^16.18.23"
+  }
+}
