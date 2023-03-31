@@ -1,12 +1,11 @@
 {
   "name": "@vededoc/sjsutils",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "some javascript utility functions",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "publish": "rm -rf dist && tsc && npm publish",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
