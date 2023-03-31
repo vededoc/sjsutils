@@ -1,4 +1,15 @@
-import {split, toDateNums, toSqlDate, runCmd, randomInt, randomStr, randomFloat, resolveSize, durStr2Ms} from "../lib";
+import {
+    split,
+    toDateNums,
+    toSqlDate,
+    runCmd,
+    randomInt,
+    randomStr,
+    randomFloat,
+    resolveSize,
+    durStr2Ms,
+    resolveDayTime
+} from "../lib";
 
 console.info(toSqlDate(new Date('2023-01-20Z'), true))
 // output is '2023-01-20 00:00:01'
@@ -28,5 +39,5 @@ console.info(resolveSize('2M'), resolveSize('0.5G'))
 console.info(durStr2Ms('1d'))
 // output is milliseconds for 1day
 
-console.info(durStr2Ms('1h30m'))
+console.info(resolveDayTime('1h30m'))
 // output is milliseconds for 1hour+30minutes
