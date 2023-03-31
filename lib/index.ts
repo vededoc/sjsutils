@@ -9,27 +9,27 @@ export const MIN_MS = SEC_MS * 60
 export const HOUR_MS = MIN_MS * 60
 export const DAY_MS = HOUR_MS * 24
 
-export async function WaitMs(ms: number) {
+export async function waitMs(ms: number) {
     return new Promise((res,) => {
         setTimeout(res, ms)
     })
 }
 
-export async function WaitSec(sec: number) {
-    return WaitMs(SEC_MS * sec)
+export async function waitSec(sec: number) {
+    return waitMs(SEC_MS * sec)
 }
 
-export async function WaitMin(minute: number) {
-    return WaitMs(MIN_MS * minute)
+export async function waitMin(minute: number) {
+    return waitMs(MIN_MS * minute)
 }
 
-export async function WaitHour(hour: number) {
-    return WaitMs(HOUR_MS * hour)
+export async function waitHour(hour: number) {
+    return waitMs(HOUR_MS * hour)
 }
 
 export type TimeType = 'hour' | 'min' | 'sec' | 'msec'
 
-export function DateDiff(d1: Date, d2: Date, out: TimeType = 'sec') {
+export function dateDiff(d1: Date, d2: Date, out: TimeType = 'sec') {
     const dt = d1.getTime() - d2.getTime()
     if (out == 'hour') {
         return dt / (1000 * 60 * 60)
