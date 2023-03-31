@@ -9,22 +9,46 @@ export const MIN_MS = SEC_MS * 60
 export const HOUR_MS = MIN_MS * 60
 export const DAY_MS = HOUR_MS * 24
 
-export async function waitMs(ms: number) {
+export const SIZE_KILO = 1024
+export const SIZE_MEGA = 1024*1024
+export const SIZE_GIGA = 1024*1024*1024
+
+/**
+ * wait for milliseconds
+ * @example
+ * await waiMs(500); // wait for 500 milliseconds
+ *
+ * @param milliseconds
+ */
+export async function waitMs(milliseconds: number) {
     return new Promise((res,) => {
-        setTimeout(res, ms)
+        setTimeout(res, milliseconds)
     })
 }
 
-export async function waitSec(sec: number) {
-    return waitMs(SEC_MS * sec)
+/**
+ * wait for seconds
+ *  *
+ * @param seconds
+ */
+export async function waitSec(seconds: number) {
+    return waitMs(SEC_MS * seconds)
 }
 
-export async function waitMin(minute: number) {
-    return waitMs(MIN_MS * minute)
+/**
+ * wait for minutes
+ * @param minutes
+ */
+export async function waitMin(minutes: number) {
+    return waitMs(MIN_MS * minutes)
 }
 
-export async function waitHour(hour: number) {
-    return waitMs(HOUR_MS * hour)
+/**
+ * wait for hours
+ * @param hours
+ */
+export async function waitHour(hours: number) {
+    return waitMs(HOUR_MS * hours)
 }
 
 export type TimeType = 'hour' | 'min' | 'sec' | 'msec'
@@ -48,6 +72,14 @@ export function lastDayOfMonth(ct: Date) {
     return (new Date(ct.getFullYear(), ct.getMonth() + 1, 0)).getDate()
 }
 
+/**
+ * convert duration string to milliseconds
+ * @example
+ * durStr2Ms('2h'); // it will return 2*60*1000
+ *
+ * @param dur - number+specifier, ex) 1h, 2d, 30s, 5m, ...
+ * @return milliseconds
+ */
 export function durStr2Ms(dur: string): number {
     const re = /[0-9]+[Mdhms]/g
     const vs = dur.match(re)
@@ -83,7 +115,11 @@ export function durStr2Ms(dur: string): number {
     return res
 }
 
-// 2023-01-01 12:00:00 format
+/**
+ * convert Date to string of sql style
+ * @param ct - target Date object
+ * @param utc - if true, convert as UTC
+ */
 export function toSqlDate(ct: Date, utc: boolean = false) {
     if (!utc) {
         return ct.getFullYear().toString()
@@ -112,6 +148,12 @@ export function toSqlDate(ct: Date, utc: boolean = false) {
     }
 }
 
+/**
+ * get just numbers of Date,
+ * @example
+ * toDateNums(new Date()); // 20221010091030
+ * @param ct
+ */
 export function toDateNums(ct: Date) {
     return ct.getFullYear().toString() +
         (ct.getMonth() + 1).toString().padStart(2, '0') +
@@ -122,16 +164,30 @@ export function toDateNums(ct: Date) {
 }
 
 
+/**
+ * get random integer number in n >= min and n < max
+ * @param min - min
+ * @param max - max
+ */
 export function randomInt(min, max): number {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
 }
 
+/**
+ * get random float number in n >= min and n < max
+ * @param min
+ * @param max
+ */
 export function randomFloat(min, max): number {
     return (Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
 }
 
+/**
+ * get random string of specified length, max length is 32
+ * @param size
+ */
 export function randomStr(size: number) {
     if (size > 32) {
         throw Error('### size is too big')
@@ -142,10 +198,19 @@ export function randomStr(size: number) {
 
 const gSpReg = /[^\ ]+/g
 
+/**
+ * split string with space removing contiguous spaces
+ * @param s - target string
+ */
 export function splitSpace(s: string): string[] {
     return s.match(gSpReg)
 }
 
+/**
+ * split string with delimiter
+ * @param s - target string
+ * @param delc - delimiter character
+ */
 export function split(s: string, delc: string = ' ') {
     const myRe = new RegExp(`[^${delc}]+`, 'g');
     return s.match(myRe)
@@ -167,6 +232,12 @@ export function randomStrAlpha(n: number) {
     }
 }
 
+/**
+ * run an application
+ * @param cmd - application to run
+ * @param args - arguments lists
+ * @param maxLines - max lines for capturing outputs, default is no limit
+ */
 export async function runCmd(cmd: string, args: string[], maxLines?: number): Promise<string[]> {
     return new Promise((res, rej) => {
         const lines: string[] = []
@@ -196,10 +267,8 @@ export async function runCmd(cmd: string, args: string[], maxLines?: number): Pr
 
 /**
  * convert size string to number
- *
- * @param val
- * number+specifier('G', 'M', 'K')
- * ex) 0.5M == 0.5 mega byte
+ * @param val - number+specifier('G', 'M', 'K'), ex) 0.5M == 0.5 mega byte
+ * @return {number} size as bytes
  */
 export function resolveSize(val: string): number {
     const unit = val.slice(-1)
