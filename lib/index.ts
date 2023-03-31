@@ -16,7 +16,7 @@ export const SIZE_GIGA = 1024*1024*1024
 /**
  * wait for milliseconds
  * @example
- * await waiMs(500); // wait for 500 milliseconds
+ * await waitMs(500); // wait for 500 milliseconds
  *
  * @param milliseconds
  */
@@ -28,7 +28,6 @@ export async function waitMs(milliseconds: number) {
 
 /**
  * wait for seconds
- *  *
  * @param seconds
  */
 export async function waitSec(seconds: number) {
@@ -77,7 +76,7 @@ export function lastDayOfMonth(ct: Date) {
  * @example
  * durStr2Ms('2h'); // it will return 2*60*1000
  *
- * @param dur - number+specifier, ex) 1h, 2d, 30s, 5m, ...
+ * @param dur number+specifier, ex) 1h, 2d, 30s, 5m, ...
  * @return milliseconds
  */
 export function durStr2Ms(dur: string): number {
@@ -117,8 +116,8 @@ export function durStr2Ms(dur: string): number {
 
 /**
  * convert Date to string of sql style
- * @param ct - target Date object
- * @param utc - if true, convert as UTC
+ * @param ct target Date object
+ * @param utc if true, convert as UTC
  */
 export function toSqlDate(ct: Date, utc: boolean = false) {
     if (!utc) {
@@ -166,8 +165,8 @@ export function toDateNums(ct: Date) {
 
 /**
  * get random integer number in n >= min and n < max
- * @param min - min
- * @param max - max
+ * @param min min in range
+ * @param max max in range (not include)
  */
 export function randomInt(min, max): number {
     min = Math.ceil(min);
@@ -177,8 +176,8 @@ export function randomInt(min, max): number {
 
 /**
  * get random float number in n >= min and n < max
- * @param min
- * @param max
+ * @param min min in range
+ * @param max max in range (not include)
  */
 export function randomFloat(min, max): number {
     return (Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
@@ -200,7 +199,7 @@ const gSpReg = /[^\ ]+/g
 
 /**
  * split string with space removing contiguous spaces
- * @param s - target string
+ * @param s target string
  */
 export function splitSpace(s: string): string[] {
     return s.match(gSpReg)
@@ -208,8 +207,8 @@ export function splitSpace(s: string): string[] {
 
 /**
  * split string with delimiter
- * @param s - target string
- * @param delc - delimiter character
+ * @param s target string
+ * @param delc delimiter character
  */
 export function split(s: string, delc: string = ' ') {
     const myRe = new RegExp(`[^${delc}]+`, 'g');
@@ -234,9 +233,10 @@ export function randomStrAlpha(n: number) {
 
 /**
  * run an application
- * @param cmd - application to run
- * @param args - arguments lists
- * @param maxLines - max lines for capturing outputs, default is no limit
+ * @param cmd application to run
+ * @param args arguments lists
+ * @param maxLines max lines for capturing outputs, default is no limit
+ * @return stdout lines
  */
 export async function runCmd(cmd: string, args: string[], maxLines?: number): Promise<string[]> {
     return new Promise((res, rej) => {
@@ -284,4 +284,16 @@ export function resolveSize(val: string): number {
     } else {
         return Number.parseFloat(val)
     }
+}
+
+/**
+ * get milliseconds from day-time string
+ * @example
+ * resolveDayTime('1d'); // it will return for milliseconds 1 day
+ * resolveDayTime('1d30m'); // it will return for milliseconds 1 day + 30 minutes
+ *
+ * @param val number+specifier, specifier is 'd' or 'h' or 'm' or 's'
+ */
+export function resolveDayTime(val: string): number {
+    return durStr2Ms(val)
 }
