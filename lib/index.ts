@@ -191,7 +191,7 @@ export function randomStr(size: number) {
     if (size > 32) {
         throw Error('### size is too big')
     }
-    return crypto.randomUUID().replace('-', '').slice(0, size)
+    return crypto.randomUUID().replaceAll('-', '').slice(0, size)
 }
 
 
