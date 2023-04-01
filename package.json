@@ -1,6 +1,6 @@
 {
   "name": "@vededoc/sjsutils",
-  "version": "0.0.8",
+  "version": "0.0.8-beta.0",
   "description": "some javascript utility functions",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
