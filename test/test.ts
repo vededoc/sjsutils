@@ -8,7 +8,7 @@ import {
     randomFloat,
     resolveSize,
     durStr2Ms,
-    resolveDayTime
+    resolveDayTime, resolveFile
 } from "../lib";
 
 console.info(toSqlDate(new Date('2023-01-20Z'), true))
@@ -41,3 +41,6 @@ console.info(durStr2Ms('1d'))
 
 console.info(resolveDayTime('1h30m'))
 // output is milliseconds for 1hour+30minutes
+
+console.info( resolveFile('/usr/bin/ls') )
+// output is 'ext'

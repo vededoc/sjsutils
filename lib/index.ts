@@ -1,5 +1,7 @@
 import * as readline from "readline";
 import {spawn} from "child_process";
+import * as fs from "fs";
+import * as path from "path";
 
 const crypto = require('node:crypto')
 
@@ -296,4 +298,42 @@ export function resolveSize(val: string): number {
  */
 export function resolveDayTime(val: string): number {
     return durStr2Ms(val)
+}
+
+/**
+ * resolve a file if it is a js or executable file
+ * @param file target file path
+ * @return 'js' or 'exe' or 'undefined'
+*/
+export function resolveFile(file: string): string {
+    const pfn = path.parse(file);
+    if(pfn.ext == '.js' || pfn.ext == '.cjs' || pfn.ext == 'mjs') {
+        return 'js'
+    }
+    let hf;
+    let res: string;
+    try {
+        hf = fs.openSync(file, 'r')
+        const buf = new Uint8Array(64)
+        const rc = fs.readSync(hf, buf)
+        if(rc > 4 && buf[0]==0x7f && buf[1]==0x45 && buf[2]==0x4c && buf[3]==0x46) { // ELF check
+            res = 'exe'
+        }
+
+        const shebang = new TextDecoder().decode(buf);
+        if(shebang.slice(0,1)=='#') {
+            const vs = splitSpace(shebang.split('\n')[0])
+            if(vs[1]=='node' || vs[1]=='nodejs') {
+                res = 'js'
+            }
+        }
+    } catch (err) {
+        console.error(err)
+    } finally {
+        if(hf) {
+            fs.closeSync(hf)
+        }
+    }
+
+    return res
 }
