@@ -49,3 +49,18 @@ console.info(resolveSize('2M'), resolveSize('0.5G'))
 // output
 
 ```
+
+### Fake event loop
+Fake asynchronous event loop
+```javascript
+const evnetLoop = new FakeEventLoop()
+eventLoop.loop( async msg => {
+    if(msg.msgId === 'wait') {
+        console.info('wait for duration:', msg.duration)
+        await waitSec(msg.duration)    
+    }
+})
+eventLoop.post( {msgId: 'wait', duration: 1})
+eventLoop.post( {msgId: 'wait', duration: 2})
+eventLoop.post( {msgId: 'wait', duration: 3})
+```
