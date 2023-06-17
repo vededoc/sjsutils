@@ -2,8 +2,51 @@ import * as readline from "readline";
 import {spawn} from "child_process";
 import * as fs from "fs";
 import * as path from "path";
+import * as os from "os";
+import {Readable} from 'stream'
 
 const crypto = require('node:crypto')
+
+export interface OsReleaseInfo {
+    /**
+     * OS name
+     */
+    NAME: string
+
+    /**
+     * os version in detail, ex) "20.04.5 LTS (Focal Fossa)
+     */
+    VERSION: string
+
+    /**
+     * os id, ex) "ubuntu"
+     */
+    ID:string
+
+    /**
+     * derivative of, ex) "debian"
+     */
+    ID_LIKE:string
+
+    PRETTY_NAME:string
+
+    /**
+     * version id, ex) "20.04"
+     */
+    VERSION_ID:string
+
+    HOME_URL:string
+    SUPPORT_URL:string
+    BUG_REPORT_URL:string
+    PRIVACY_POLICY_URL:string
+
+    /**
+     * version code name, ex) "focal"
+     */
+    VERSION_CODENAME:string
+}
+
+
 export const SEC_MS = 1000
 export const MIN_MS = SEC_MS * 60
 export const HOUR_MS = MIN_MS * 60
@@ -52,7 +95,14 @@ export async function waitHour(hours: number) {
 
 export type TimeType = 'hour' | 'min' | 'sec' | 'msec'
 
-export function dateDiff(d1: Date, d2: Date, out: TimeType = 'sec') {
+/**
+ * return duration from d2 to d1 ( d1-d2 )
+ *
+ * @param {Date} d1 - end date
+ * @param {Date} d2 - from date
+ * @param {TimeType} out - difference unit type,
+ */
+export function dateDiff(d1: Date, d2: Date, out: TimeType = 'sec'): number {
     const dt = d1.getTime() - d2.getTime()
     if (out == 'hour') {
         return dt / (1000 * 60 * 60)
@@ -336,3 +386,30 @@ export function resolveFile(file: string): string {
     return res
 }
 
+/**
+ * return /etc/os-release information
+ *
+ * @return OsReleaseInfo
+ */
+export async function osRelease(): Promise<OsReleaseInfo> {
+    return new Promise((res, rej) => {
+        if(["linux", 'darwin'].indexOf(os.platform() ) != -1) {
+            const info = {} as OsReleaseInfo
+            fs.readFile('/etc/os-release', (err, data) => {
+                const stream = new Readable()
+                stream.push(data); stream.push(null)
+                const rl = readline.createInterface({input: stream, crlfDelay:Infinity})
+                rl.on('line', line => {
+                    const [key, value] = line.split('=')
+                    info[key] = value.replace(/"/g,'');
+                    // info[key] = value.replaceAll('"', '')
+                })
+                rl.on('close', ()=> {
+                    res(info)
+                })
+            })
+        } else {
+            rej(Error('NOT_SUPPORTED'))
+        }
+    })
+}

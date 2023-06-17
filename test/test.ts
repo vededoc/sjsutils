@@ -8,8 +8,9 @@ import {
     randomFloat,
     resolveSize,
     durStr2Ms,
-    resolveDayTime, resolveFile
+    resolveDayTime, resolveFile, osRelease, dateDiff, waitSec
 } from "../lib";
+import {MsgQue} from "../lib/MsgQue";
 
 console.info(toSqlDate(new Date('2023-01-20Z'), true))
 // output is '2023-01-20 00:00:01'
@@ -44,3 +45,37 @@ console.info(resolveDayTime('1h30m'))
 
 console.info( resolveFile('/usr/bin/ls') )
 // output is 'ext'
+dateDiff(new Date(), new Date())
+osRelease().then( res => console.info('os info:', res))
+
+{
+    const mq = new MsgQue()
+    mq.start(async evt => {
+        if(evt == 1) {
+            console.info('event 1')
+            mq.post(2)
+            mq.post(2)
+            mq.post(2)
+            await waitSec(1)
+        } else if(evt == 2) {
+            console.info('event 2')
+            mq.post(3)
+            await waitSec(0.5)
+        } else if(evt == 3) {
+            console.info('event 3')
+        } else if(evt.type == 'chunk') {
+            console.info('chunk evt')
+        }
+        else {
+            console.error('### unknown event')
+        }
+    })
+    mq.post(1)
+    const evt = new Event('chunk')
+    mq.post(evt)
+    mq.exit().then(res => {
+        console.info('mq terminated')
+    }).catch(err => {
+        console.error(err)
+    })
+}

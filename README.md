@@ -50,17 +50,19 @@ console.info(resolveSize('2M'), resolveSize('0.5G'))
 
 ```
 
-### Fake event loop
-Fake asynchronous event loop
+### message queue
+
 ```javascript
-const evnetLoop = new FakeEventLoop()
-eventLoop.loop( async msg => {
-    if(msg.msgId === 'wait') {
-        console.info('wait for duration:', msg.duration)
-        await waitSec(msg.duration)    
-    }
+const msgQue = new MsgQue()
+msgQue.start(async msg => {
+  if(msg.msgId === 'wait') {
+    console.info('wait for duration:', msg.duration)
+    await waitSec(msg.duration)
+  }
 })
-eventLoop.post( {msgId: 'wait', duration: 1})
-eventLoop.post( {msgId: 'wait', duration: 2})
-eventLoop.post( {msgId: 'wait', duration: 3})
+
+msgQue.post( {msgId: 'wait', duration: 1})
+msgQue.post( {msgId: 'wait', duration: 2})
+msgQue.post( {msgId: 'wait', duration: 3})
+msgQue.exit().catch(err => console.error(err))
 ```
